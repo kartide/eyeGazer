@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebGazer Mouse Cursor</title>
+    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        #cursor {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <div id="cursor"></div>
+
+    <script>
+        $(document).ready(function() {
+            // Start the WebGazer calibration process
+            webgazer.setGazeListener(function(data, elapsedTime) {
+                if (data == null) {
+                    return;
+                }
+                var xPrediction = data.x; // Get the predicted x-coordinate
+                var yPrediction = data.y; // Get the predicted y-coordinate
+
+                // Update the mouse cursor position
+                updateCursorPosition(xPrediction, yPrediction);
+            }).begin();
+        });
+
+        // Function to update the mouse cursor position
+        function updateCursorPosition(x, y) {
+            var cursor = document.getElementById('cursor');
+            cursor.style.left = x + 'px';
+            cursor.style.top = y + 'px';
+        }
+    </script>
+</body>
+</html>

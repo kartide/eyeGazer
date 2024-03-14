@@ -1,45 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WebGazer Mouse Cursor</title>
-    <script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        #cursor {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: red;
-            border-radius: 50%;
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WebGazer Example</title>
+<script src="https://webgazer.cs.brown.edu/webgazer.js"></script>
+<script>
+  // Initialize WebGazer
+  webgazer.setRegression('ridge') /* currently must set regression and tracker */
+      .setTracker('clmtrackr')
+      .setGazeListener(function(data, elapsedTime) {
+        if (data == null) {
+          return;
         }
-    </style>
+        var x = data.x; // x-coordinate of the predicted gaze position
+        var y = data.y; // y-coordinate of the predicted gaze position
+        console.log(x, y); // Print the coordinates to console
+      })
+      .begin();
+  
+  // Set up a button to pause/resume calibration
+  var isPaused = false;
+  document.getElementById('pause-calibration').addEventListener('click', function() {
+    if (isPaused) {
+      webgazer.resume();
+      isPaused = false;
+      this.innerHTML = "Pause Calibration";
+    } else {
+      webgazer.pause();
+      isPaused = true;
+      this.innerHTML = "Resume Calibration";
+    }
+  });
+</script>
 </head>
 <body>
-    <div id="cursor"></div>
 
-    <script>
-        $(document).ready(function() {
-            // Start the WebGazer calibration process
-            webgazer.setGazeListener(function(data, elapsedTime) {
-                if (data == null) {
-                    return;
-                }
-                var xPrediction = data.x; // Get the predicted x-coordinate
-                var yPrediction = data.y; // Get the predicted y-coordinate
+<h1>WebGazer Example</h1>
 
-                // Update the mouse cursor position
-                updateCursorPosition(xPrediction, yPrediction);
-            }).begin();
-        });
+<p>This is a simple example of using WebGazer.js to track user's gaze position on the screen.</p>
 
-        // Function to update the mouse cursor position
-        function updateCursorPosition(x, y) {
-            var cursor = document.getElementById('cursor');
-            cursor.style.left = x + 'px';
-            cursor.style.top = y + 'px';
-        }
-    </script>
+<button id="pause-calibration">Pause Calibration</button>
+
 </body>
 </html>
